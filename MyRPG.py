@@ -9,7 +9,7 @@ import pygame
 starttime = datetime.datetime.now()
 def dateandtime():
     print('Current Time:',datetime.datetime.now())
-    
+
 def currenttime():
     ts = time.time()
     st = datetime.datetime.fromtimestamp(ts).strftime('%H:%M:%S')
@@ -94,10 +94,11 @@ print(char_data)
 def initialise_inv(data, output):
     for i in range(len(data)):
         stuff = data[i].split(':')
-        if stuff[0] == 'note':
+
+        if stuff[0] == 'note' or stuff[0] == 'rank':
             output[stuff[0]] = str(stuff[1])
         else:
-            output[stuff[0]] = int(stuff[1])   
+            output[stuff[0]] = int(stuff[1])
 
 initialise_inv(char_data, char_inv)
 
@@ -109,10 +110,13 @@ def new_char():
     char_inv['smldgr'] = 1
     char_inv['new'] = 1
     char_inv['maxxp'] = 100
-    char_inv['note'] = 'Empty'
+    char_inv['note'] = 'empty'
+    char_inv['rank'] = 'peasant'
 
 if char_inv['new'] == 0:
     new_char()
+
+char_inv['rank'] = 'god'
 
 # ------------------------ WITHIN THE WORLD ------------------------
 
@@ -167,26 +171,27 @@ def mine():
     save()
     return
 
-'''
+# This is a testing function
 def multimine(n):
-    quantity_dict = {'stone':0, 'copper':0, 'iron':0, 'gold':0, 'diamond':0}
-    for i in range(n):
-        quantity = random.randint(1,char_inv['luk']+1)
-        randlist = []
-        for i in range(len(mineral_rarity_dict)):
-            mineral = str(list(mineral_rarity_dict.keys())[i])
-            randlist += [mineral]*(int(mineral_rarity_dict[mineral]*100))
-        mineral = random.choice(randlist)
-        quantity_dict[mineral] += 1
-        add(mineral, quantity)
-    line = str('Wow! You mined up '+str(quantity_dict['stone'])+' stone, '+ str(quantity_dict['copper'])+ ' copper, '+ str(quantity_dict['iron'])+ ' iron, '+ str(quantity_dict['gold'])+ ' gold and '+ str(quantity_dict['diamond'])+ ' diamond')
-    if quantity_dict['diamond']>1:
-        print(line+'s')
-    else:
-        print(line)
-    save()
+    if rank == 'God':
+        quantity_dict = {'stone':0, 'copper':0, 'iron':0, 'gold':0, 'diamond':0}
+        for i in range(n):
+            quantity = random.randint(1,char_inv['luk']+1)
+            randlist = []
+            for i in range(len(mineral_rarity_dict)):
+                mineral = str(list(mineral_rarity_dict.keys())[i])
+                randlist += [mineral]*(int(mineral_rarity_dict[mineral]*100))
+            mineral = random.choice(randlist)
+            quantity_dict[mineral] += 1
+            add(mineral, quantity)
+        line = str('Wow! You mined up '+str(quantity_dict['stone'])+' stone, '+ str(quantity_dict['copper'])+ ' copper, '+ str(quantity_dict['iron'])+ ' iron, '+ str(quantity_dict['gold'])+ ' gold and '+ str(quantity_dict['diamond'])+ ' diamond')
+        if quantity_dict['diamond']>1:
+            print(line+'s')
+        else:
+            print(line)
+        save()
     return
-'''
+
 
 def chop():
     add('wood', 1)
@@ -241,8 +246,13 @@ def buy(item, quantity):
     return
 
 def writenote():
-    inp = input('What is your note?')
+    inp = input('What is your note? ')
     char_inv['note'] =  str(inp).replace(' ','~')
+    save()
+    return
+
+def printnote():
+    print(char_inv['note'].replace('~', ' '))
     return
 
 def save():
@@ -251,13 +261,18 @@ def save():
     for i in char_inv:
         char_inv_str += i + ':' + str(char_inv.get(i)) + ' '
     char_inv_str = char_inv_str[0:-1]
-    
+
     char_inv_str = scrambler.scramble(char_inv_str)
 
     # Save the characters resources
     saveit = open(os.path.join('userdata', (name + '.txt')), 'w')
     saveit.write(char_inv_str)
     saveit.close()
+    return
 
-print('Game Saved! You have been playing for', str(datetime.datetime.now()-starttime))
-save()
+def timesave():
+    save()
+    print('Game Saved! You have been playing for', str(datetime.datetime.now()-starttime))
+    return
+
+timesave()

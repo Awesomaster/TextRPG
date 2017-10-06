@@ -1,4 +1,5 @@
 new: 0 hp:0 maxhp:0 lvl:0 xp:0 maxxp:0 spoints:0 str:0 luk:0 def:0 dex:0 coin:0 
 smldgr:0 shld:0 
 stone:0 copper:0 iron:0 gold:0 diamond:0 wood:0 
-note:Note
+rank:none
+note:note
